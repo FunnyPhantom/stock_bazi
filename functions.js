@@ -101,3 +101,14 @@ const parseTimeStampArr = (timeStampArrString = "") => {
     .reduce((arr1, arr2) => [...arr1, ...arr2], [])
     .sort();
 };
+
+const getStockData = async (urlId) => {
+  const url = (urlId) =>
+    `http://members.tsetmc.com/tsev2/data/InstTradeHistory.aspx?i=${urlId}&Top=999999&A=1`;
+  const rawData = (await axios.get(url(urlId))).data;
+  return dataParser(rawData);
+};
+
+module.exports = {
+  getStockData,
+};

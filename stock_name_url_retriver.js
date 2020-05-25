@@ -1,5 +1,7 @@
 const pup = require("puppeteer");
 const mongoose = require("mongoose");
+const StockURLNameModel = require("./models/StockURLName.model");
+
 const getStockData = async () => {
   const overwatch_url = "http://www.tsetmc.com/loader.aspx?ParTree=15131F";
   const browser = await pup.launch();
@@ -71,10 +73,6 @@ const stockWithCorrectName = (v) => ({
 const save_to_mongo = async () => {
   try {
     await mongoose.connect("mongodb://localhost:27017/iran_stock_retriver");
-    const StockURLNameModel = mongoose.model(
-      "url_namad",
-      mongoose.Schema({ name: String, url: String })
-    );
 
     const result = await StockURLNameModel.insertMany(
       (await getStockData()).map(stockWithCorrectName)
