@@ -14,7 +14,9 @@ jobs:
           node-version: '12'
       - name: echo node version
         run: node --version
-      - uses: borales/actions-yarn@v2.0.0
+      - uses: borales/actions-yarn@v2.1.0
+      - name: echo node version
+        run: node --version
       - name: yarning
         run: |
           yarn test
