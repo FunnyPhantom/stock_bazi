@@ -12,10 +12,9 @@ jobs:
         uses: actions/setup-node@v1.4.2
         with:
           node-version: '12'
-      - uses: borales/actions-yarn@v2.1.0
       - name: build
         run: |
-          yarn build
+          npm run build
       - name: since api tests cant be tested on github CI, we need to find a way to seperate them
         run: echo TODO
         env:
