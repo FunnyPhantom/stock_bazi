@@ -16,7 +16,7 @@ jobs:
 #           node-version: '12'
       - name: build
         run: |
-          npm run build
+          yarn build
       - name: since api tests cant be tested on github CI, we need to find a way to seperate them
         run: echo TODO
         env:
