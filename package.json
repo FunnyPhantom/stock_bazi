@@ -37,6 +37,7 @@
     "@types/bluebird": "^3.5.27",
     "@types/body-parser": "^1.17.1",
     "@types/chai": "^4.2.3",
+    "@types/cheerio": "^0.22.18",
     "@types/compression": "^1.0.1",
     "@types/concurrently": "^4.1.0",
     "@types/connect-mongo": "^3.0.0",

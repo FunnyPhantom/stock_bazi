@@ -121,6 +121,7 @@ export const getTargetDaysForGettingDetail = async (
   const data = parseMatrix(await getStockData(stockURL));
   const tDays = targetDays(data, startDate, endDate);
   return tDays.map(getDate);
+  
 };
 
 export default getStockData;

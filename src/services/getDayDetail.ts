@@ -1,8 +1,8 @@
-import pup from "puppeteer";
 import axios from "axios";
 import { load } from "cheerio";
-import fs from "fs";
-const detailUrl = (stockURL, day) =>
+import { DayDetail } from "../types/types";
+
+const detailUrl = (stockURL: string, day: string) =>
   `http://cdn.tsetmc.com/Loader.aspx?ParTree=15131P&i=${stockURL}&d=${day}`;
 
 const InstrumentStateCodeToFarsi = {
@@ -12,8 +12,7 @@ const InstrumentStateCodeToFarsi = {
   R: "محفوظ",
 };
 
-
-const findTextAndReturnRemainder = (target, variable) => {
+const findTextAndReturnRemainder = (target: string, variable: string) => {
   const chopFront = target.substring(
     target.search(variable) + variable.length,
     target.length
@@ -22,7 +21,7 @@ const findTextAndReturnRemainder = (target, variable) => {
   return result;
 };
 
-const getScriptTextFromUrl = async (url) => {
+const getScriptTextFromUrl = async (url: string) => {
   const data = (await axios.get(url)).data;
   const $ = load(data);
   const sc = $("script");
@@ -37,7 +36,10 @@ const getScriptTextFromUrl = async (url) => {
   return text;
 };
 
-const getVariableFromScriptText = (scriptText, variableName) => {
+const getVariableFromScriptText = (
+  scriptText: string,
+  variableName: string
+) => {
   const dataString = findTextAndReturnRemainder(
     scriptText,
     `var ${variableName}=`
@@ -55,7 +57,7 @@ const getVariableFromScriptText = (scriptText, variableName) => {
   }
 };
 
-const getDayDetail = async (stockURL, day) => {
+const getDayDetail = async (stockURL: string, day: string) => {
   // const brw = await pup.launch();
   // const pg = await brw.newPage();
   // await pg.goto(detailUrl(stockURL, day), {
@@ -86,8 +88,7 @@ const getDayDetail = async (stockURL, day) => {
     BestLimitData: getVariableFromScriptText(scText, "BestLimitData"), // idk ?
   };
 
-  return allData;
+  return allData as DayDetail;
 };
-
 
 export default getDayDetail;

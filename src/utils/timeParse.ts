@@ -5,6 +5,8 @@ const concatString = (s1: string, s2: string) => s1 + s2;
 const distinct = <T>(value: T, index: number, arr: Array<T>): boolean =>
   arr.indexOf(value) === index;
 
+const compareAsc = (a: number, b: number) => a - b;
+
 const parseSamplingExact = (tokens: string[]) => {
   const samplingTime = tokens[0];
   return [
@@ -65,7 +67,6 @@ const parseSamplingEntry = (samplingEntryInput: string) => {
   const trimmed = samplingEntryInput.trim();
   const tokens = trimmed
     .substring(1, trimmed.length - 1)
-    //todo: This is a bug, we need to match regex by parenthesis and then itereate over each group to get samplingEnteries
     .split(",")
     .map((s) => s.trim());
   if (tokens.length === 1) return parseSamplingExact(tokens);
@@ -73,15 +74,23 @@ const parseSamplingEntry = (samplingEntryInput: string) => {
   throw new Error("lengh of sample entry was incorrect");
 };
 
-const parseSamplingInput = (samplingInputString: string) => {
-  const whiteSpaceTrimmed = samplingInputString.trim();
-  const samplingEnteries = whiteSpaceTrimmed
-    .substring(1, whiteSpaceTrimmed.length - 1)
-    .split(",")
-    .flatMap(parseSamplingEntry)
-    .filter(distinct)
-    .sort();
-  console.log(samplingEnteries);
+const getSamplingEntryInputOutOfSamplingInput = (
+  samplingInputString: string
+): string[] => {
+  const trimmed = samplingInputString.trim();
+  const withoutBracks = trimmed.substring(0, trimmed.length - 1);
+  const entries: string[] = [];
+  let pos = withoutBracks.indexOf("(", 0);
+  while (withoutBracks.indexOf("(", pos) !== -1) {
+    const secondPos = withoutBracks.indexOf(")", pos) + 1;
+    entries.push(withoutBracks.substring(pos, secondPos));
+    pos = secondPos;
+  }
+  return entries;
 };
 
-parseSamplingInput("[(08:51:22),(8:31:00, 12:00:00, 20m)]");
+export const parseSamplingInput = (samplingInputString: string) =>
+  getSamplingEntryInputOutOfSamplingInput(samplingInputString)
+    .flatMap(parseSamplingEntry)
+    .filter(distinct)
+    .sort(compareAsc);
